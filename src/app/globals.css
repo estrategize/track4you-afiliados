@@ -1,23 +1,11 @@
 @import "tailwindcss";
-/*
-  Usamos `@import "tailwindcss/theme";` para carregar todos os
-  valores de tema padrão do Tailwind (como --color-blue-500) como variáveis CSS.
-*/
 @import "tailwindcss/theme";
 
-/*
-  Ajustamos o :root para usar seu tema escuro como padrão,
-  conforme sua configuração original.
-*/
 :root {
   --background: var(--color-slate-900);
   --foreground: var(--color-white);
 }
 
-/*
-  Adicionamos uma media query para o tema claro, caso o usuário
-  tenha essa preferência no sistema operacional.
-*/
 @media (prefers-color-scheme: light) {
   :root {
     --background: var(--color-white);
@@ -26,48 +14,75 @@
 }
 
 @theme inline {
-  /* SEU TEMA PERSONALIZADO */
+  /* FONT DEFINITIONS */
+  --font-sans: var(--font-figtree);
+  --font-mono: '"Courier New"', 'monospace';
+
+  /* BASE COLORS */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
-  /*
-    Suas cores semânticas, referenciando os nomes das cores do Tailwind.
-    Isso é legível, fácil de manter e a forma correta na V4.
-  */
   --color-border: var(--color-slate-700);
   --color-input: var(--color-slate-800);
   --color-ring: var(--color-blue-500);
 
-  --color-card: var(--color-gray-800);
-  --color-card-foreground: var(--color-white);
-  --color-card-muted-foreground: var(--color-gray-400);
-  --color-card-inner: var(--color-gray-100);
-
-  --color-primary: var(--color-blue-500);
+  /* HSL COLOR DEFINITIONS */
+  /* Primary (Blue 500) */
+  --color-primary-h: 217;
+  --color-primary-s: 91%;
+  --color-primary-l: 60%;
+  --color-primary: hsl(var(--color-primary-h) var(--color-primary-s) var(--color-primary-l));
   --color-primary-foreground: var(--color-white);
 
-  --color-accent: var(--color-purple-600);
-  --color-accent-hover: var(--color-purple-700);
+  /* Accent (Purple 600) */
+  --color-accent-h: 273;
+  --color-accent-s: 82%;
+  --color-accent-l: 56%;
+  --color-accent: hsl(var(--color-accent-h) var(--color-accent-s) var(--color-accent-l));
   --color-accent-foreground: var(--color-white);
 
-  --color-destructive: var(--color-red-500);
+  /* Destructive (Red 500) */
+  --color-destructive-h: 0;
+  --color-destructive-s: 84%;
+  --color-destructive-l: 60%;
+  --color-destructive: hsl(var(--color-destructive-h) var(--color-destructive-s) var(--color-destructive-l));
   --color-destructive-foreground: var(--color-white);
-  --color-destructive-subtle: var(--color-red-100);
-  --color-destructive-subtle-foreground: var(--color-red-700);
-  --color-destructive-subtle-border: var(--color-red-400);
 
-  --color-success: var(--color-green-300);
-  --color-success-foreground: var(--color-green-900);
-
-  --color-warning: var(--color-yellow-300);
-  --color-warning-foreground: var(--color-yellow-900);
-
-  /* Suas definições de fonte */
-  --font-sans: var(--font-figtree);
-  --font-mono: '"Courier New"', 'monospace';
+  --color-card: var(--color-gray-800);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* FIX: Target the :visited state as well to ensure the color is consistent. */
+a.text-accent,
+a.text-accent:visited {
+  color: var(--color-accent);
+}
+
+/* CUSTOM SCROLLBAR STYLES */
+/* For Webkit-based browsers (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--color-card);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-slate-700);
+  border-radius: 10px;
+  border: 2px solid var(--color-card);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-slate-600);
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-slate-700) var(--color-card);
 }
