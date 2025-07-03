@@ -10,9 +10,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        // Paleta de cores usando nomes semânticos e claros
-      colors: {
+        colors: {
         'background': colors.slate[900],     // Fundo principal do app
         'foreground': colors.white,          // Texto principal sobre o fundo (branco)
         'border': colors.slate[700],         // Cor de borda padrão
@@ -54,6 +52,7 @@ const config: Config = {
           foreground: colors.yellow[900],  // Cor de texto para fundos de aviso (se necessário)
         },
       },
+      fontFamily: {      
         // A fonte principal (sans-serif) continua sendo Figtree
         sans: ['var(--font-figtree)', ...defaultTheme.fontFamily.sans],
         
