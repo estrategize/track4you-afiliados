@@ -115,35 +115,35 @@ export default function AuthPage() {
                         {!isLoginView && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-card-muted-foreground mb-1">Nome</label>
+                                    <label className="block font-medium text-card-muted-foreground mb-1">Nome</label>
                                     <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required className="w-full px-3 py-2 bg-input border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring text-foreground" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-card-muted-foreground mb-1">Sobrenome</label>
+                                    <label className="block font-medium text-card-muted-foreground mb-1">Sobrenome</label>
                                     <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required className="w-full px-3 py-2 bg-input border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring text-foreground" />
                                 </div>
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-card-muted-foreground mb-1">Email</label>
+                            <label className="block font-medium text-card-muted-foreground mb-1">Email</label>
                             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-3 py-2 bg-input border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring text-foreground" />
                         </div>
 
                         {!isLoginView && (
                              <div>
-                                <label className="block text-sm font-medium text-card-muted-foreground mb-1">Telefone (Opcional)</label>
+                                <label className="block font-medium text-card-muted-foreground mb-1">Telefone (Opcional)</label>
                                 <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full px-3 py-2 bg-input border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring text-foreground" />
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-card-muted-foreground mb-1">Senha</label>
+                            <label className="block font-medium text-card-muted-foreground mb-1">Senha</label>
                             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full px-3 py-2 bg-input border border-border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring text-foreground" />
                         </div>
 
-                        {error && <p className="text-sm bg-destructive-subtle text-destructive-subtle-foreground p-3 rounded-md">{error}</p>}
-                        {message && <p className="text-sm bg-success/20 text-success p-3 rounded-md">{message}</p>}
+                        {error && <p className="bg-destructive-subtle text-destructive-subtle-foreground p-3 rounded-md">{error}</p>}
+                        {message && <p className="bg-success/20 text-success p-3 rounded-md">{message}</p>}
 
                         <div>
                             <Button type="submit" disabled={loading} variant="accent" className="w-full justify-between">

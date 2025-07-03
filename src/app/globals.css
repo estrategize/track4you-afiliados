@@ -1,26 +1,73 @@
 @import "tailwindcss";
+/*
+  Usamos `@import "tailwindcss/theme";` para carregar todos os
+  valores de tema padrão do Tailwind (como --color-blue-500) como variáveis CSS.
+*/
+@import "tailwindcss/theme";
 
+/*
+  Ajustamos o :root para usar seu tema escuro como padrão,
+  conforme sua configuração original.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-slate-900);
+  --foreground: var(--color-white);
+}
+
+/*
+  Adicionamos uma media query para o tema claro, caso o usuário
+  tenha essa preferência no sistema operacional.
+*/
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: var(--color-white);
+    --foreground: var(--color-slate-900);
+  }
 }
 
 @theme inline {
+  /* SEU TEMA PERSONALIZADO */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /*
+    Suas cores semânticas, referenciando os nomes das cores do Tailwind.
+    Isso é legível, fácil de manter e a forma correta na V4.
+  */
+  --color-border: var(--color-slate-700);
+  --color-input: var(--color-slate-800);
+  --color-ring: var(--color-blue-500);
+
+  --color-card: var(--color-gray-800);
+  --color-card-foreground: var(--color-white);
+  --color-card-muted-foreground: var(--color-gray-400);
+  --color-card-inner: var(--color-gray-100);
+
+  --color-primary: var(--color-blue-500);
+  --color-primary-foreground: var(--color-white);
+
+  --color-accent: var(--color-purple-600);
+  --color-accent-hover: var(--color-purple-700);
+  --color-accent-foreground: var(--color-white);
+
+  --color-destructive: var(--color-red-500);
+  --color-destructive-foreground: var(--color-white);
+  --color-destructive-subtle: var(--color-red-100);
+  --color-destructive-subtle-foreground: var(--color-red-700);
+  --color-destructive-subtle-border: var(--color-red-400);
+
+  --color-success: var(--color-green-300);
+  --color-success-foreground: var(--color-green-900);
+
+  --color-warning: var(--color-yellow-300);
+  --color-warning-foreground: var(--color-yellow-900);
+
+  /* Suas definições de fonte */
+  --font-sans: var(--font-figtree);
+  --font-mono: '"Courier New"', 'monospace';
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

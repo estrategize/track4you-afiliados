@@ -6,21 +6,21 @@ import { cn } from "@/lib/utils" // Importamos nossa função utilitária
 // Aqui definimos todas as variantes de estilo do nosso botão usando cva.
 const buttonVariants = cva(
   // Estilos base, aplicados a todas as variantes
-  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer",
   {
     variants: {
       // Nossas variantes de cor, baseadas no tailwind.config.ts
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        accent: "bg-accent text-accent-foreground hover:bg-accent/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/50",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/50",
+        accent: "bg-accent text-accent-foreground hover:bg-accent-hover",
         outline: "border border-input hover:bg-accent hover:text-accent-foreground",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "underline-offset-4 hover:underline text-primary",
       },
       // Nossas variantes de tamanho
       size: {
-        default: "h-10 py-2 px-4",
+        default: "h-10 py-3 px-4",
         sm: "h-9 px-3 rounded-md",
         lg: "h-11 px-8 rounded-md",
       },
