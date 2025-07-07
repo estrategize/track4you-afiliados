@@ -1,36 +1,46 @@
+// src/app/page.tsx
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-8">
-      <div className="max-w-2xl text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-          Olá, Track4You Afiliados!
-        </h1>
-        <p className="mt-6 text-lg leading-8 text-gray-600">
-          Este é o seu texto padrão, renderizado com a fonte Figtree. Se você
-          está vendo uma fonte limpa e moderna, está tudo certo!
-        </p>
-        <div className="mt-10 rounded-lg bg-gray-900 p-6 text-left shadow-lg">
-          <p className="font-mono text-sm text-green-400">
-            <span className="text-gray-400">
-              {'// Exemplo de código com a fonte mono'}
-            </span>
-            <br />
-            <span className="text-pink-400">const</span>{' '}
-            <span className="text-blue-400">user</span> ={' '}
-            <span className="text-gray-400">{'{'}</span>
-            <br />
-            <span className="ml-4 text-purple-400">name</span>:{' '}
-            <span className="text-yellow-400">&apos;Seu Nome&apos;</span>,
-            <br />
-            <span className="ml-4 text-purple-400">status</span>:{' '}
-            <span className="text-yellow-400">&apos;Ativo&apos;</span>
-            <br />
-            <span className="text-gray-400">{'}'}</span>;
-          </p>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-base-100 p-8 text-base-content">
+      <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold">Bem-vindo ao Track4You!</h1>
+          <p className="py-6 text-gray-400">Sua plataforma de afiliados está pronta com seu novo tema.</p>
+      </div>
+
+      {/* HeroUI Stats Component Example */}
+      <div className="stats shadow-lg bg-base-200">
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-8 w-8 stroke-current">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div className="stat-title text-gray-400">Novos Cadastros</div>
+          <div className="stat-value text-primary">31K</div>
+          <div className="stat-desc text-gray-500">Jan 1st - Feb 1st</div>
         </div>
-        <p className="mt-4 font-mono text-sm text-gray-500">
-          O bloco de código acima deve usar a fonte JetBrains Mono.
-        </p>
+        
+        <div className="stat">
+          <div className="stat-figure text-secondary">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-8 w-8 stroke-current">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+            </svg>
+          </div>
+          <div className="stat-title text-gray-400">Usuários Ativos</div>
+          <div className="stat-value text-secondary">4,200</div>
+          <div className="stat-desc text-gray-500">↗︎ 400 (22%)</div>
+        </div>
+        
+        <div className="stat">
+          <div className="stat-figure text-accent">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block h-8 w-8 stroke-current">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+            </svg>
+          </div>
+          <div className="stat-title text-gray-400">Conversões</div>
+          <div className="stat-value text-accent">1,200</div>
+          <div className="stat-desc text-gray-500">↘︎ 90 (14%)</div>
+        </div>
       </div>
     </main>
   );

@@ -15,16 +15,12 @@ export const metadata: Metadata = {
     // Set different favicons for light and dark themes
     icon: [
       { 
-        url: 'track4you/favicon-black.svg', 
         media: '(prefers-color-scheme: light)', 
-        type: 'image/svg+xml', 
-        sizes: 'any' 
+        url: '/track4you/favicon-black.svg', 
       },
       { 
-        url: 'track4you/favicon-white.svg', 
-        media: '(prefers-color-scheme: dark)', 
-        type: 'image/svg+xml', 
-        sizes: 'any' 
+        media: '(prefers-color-scheme: dark)',
+        url: '/track4you/favicon-white.svg',  
       },
     ],
   },
@@ -36,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-theme="dark">
       <body className={figtree.className}>{children}</body>
     </html>
   );
