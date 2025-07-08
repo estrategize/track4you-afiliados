@@ -9,11 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@heroui/react": "^2.8.0-beta.13",
     "@supabase/supabase-js": "^2.50.3",
+    "framer-motion": "^12.23.0",
     "next": "15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "recharts": "^3.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -21,6 +22,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/recharts": "^1.8.29",
+    "daisyui": "^5.0.46",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "tailwindcss": "^4",
