@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Sidebar from '@/components/Sidebar'; // Import the new Sidebar component
 
 // --- MOCK DATA ---
 const salesData = [
@@ -25,29 +26,23 @@ const recentSales = [
 ];
 
 // --- SVG ICONS ---
-const EyeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-purple-500"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>;
-const UsersIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-purple-500"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>;
-const UserPlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-green-500"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>;
-const UserCheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-blue-500"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>;
-const DashboardIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>;
-const LinkIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>;
-const WalletIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>;
-const SettingsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>;
+const UserMinusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-red-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle strokeWidth="2" cx="8.5" cy="7" r="4"></circle><line strokeWidth="2" x1="18" y1="8" x2="23" y2="13"></line><line strokeWidth="2" x1="23" y1="8" x2="18" y2="13"></line></svg>;
+const UsersIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-purple-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>;
+const UserPlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-green-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path> <circle strokeWidth="2" cx="8.5" cy="7" r="4"></circle><line strokeWidth="2" x1="20" y1="8" x2="20" y2="14"></line><line strokeWidth="2" x1="23" y1="11" x2="17" y2="11"></line></svg>;
+const UserCheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-blue-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle strokeWidth="2" cx="8.5" cy="7" r="4"></circle><polyline strokeWidth="2" points="17 11 19 13 23 9"></polyline></svg>;
 
 // --- Type definition for StatCard props ---
 interface StatCardProps {
     title: string;
     icon: React.ReactNode;
     value: string;
+    description: string;
     statusText: string;
     statusColor: string;
-    progress: string;
-    progressText: string;
-    progressValue: string;
 }
 
-// --- NEW STATS CARD COMPONENT ---
-const StatCard: React.FC<StatCardProps> = ({ title, icon, value, statusText, statusColor, progress, progressText, progressValue }) => (
+// --- STATS CARD COMPONENT ---
+const StatCard: React.FC<StatCardProps> = ({ title, icon, value, description, statusText, statusColor }) => (
     <motion.div 
         className="bg-slate-800 p-4 md:p-6 rounded-lg shadow-lg"
         initial={{ opacity: 0, y: 20 }} 
@@ -58,17 +53,9 @@ const StatCard: React.FC<StatCardProps> = ({ title, icon, value, statusText, sta
             <span className="text-gray-400 text-sm md:text-base">{title}</span>
             {icon}
         </div>
-        <h3 className="text-2xl md:text-3xl mt-4 text-white font-black">{value}</h3>
-        <p className={`text-sm ${statusColor}`}>{statusText}</p>
-        <div className="mt-4 pt-3 border-t border-gray-700">
-            <div className="flex justify-between items-center">
-                <span className="text-gray-400 text-xs">{progressText}</span>
-                <span className="text-white text-sm font-medium">{progressValue}</span>
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-1.5 mt-1.5">
-                <div className="bg-purple-600 h-1.5 rounded-full" style={{ width: `${progress}%` }}></div>
-            </div>
-        </div>
+        <h3 className="text-2xl md:text-3xl mt-4 text-white font-bold">{value}</h3>
+        <p className={`text-sm mt-2 ${statusColor}`}>{statusText}</p>
+        <p className="text-xs text-gray-500 mt-1">{description}</p>
     </motion.div>
 );
 
@@ -76,34 +63,11 @@ const StatCard: React.FC<StatCardProps> = ({ title, icon, value, statusText, sta
 export default function DashboardPage() {
     return (
         <div className="flex h-screen overflow-hidden bg-slate-900 text-gray-300">
-            {/* --- Lateral Menu --- */}
-            <aside className="w-64 bg-gray-800 text-gray-300 flex-col hidden lg:flex">
-                <div className="p-4 flex items-center justify-center h-20">
-                    <Image src="/track4you/logo-white-horizontal.png" width={150} height={40} alt="Track4You Logo"/>
-                </div>
-                <ul className="menu p-4 flex-grow space-y-2">
-                    <li className="menu-title"><span className="text-gray-500">Menu</span></li>
-                    <li><a className="bg-purple-600/20 text-purple-400 rounded-lg"><DashboardIcon/> Dashboard</a></li>
-                    <li><a className="hover:bg-gray-700/50 rounded-lg"><LinkIcon/> Meus Links</a></li>
-                    <li><a className="hover:bg-gray-700/50 rounded-lg"><WalletIcon/> Financeiro</a></li>
-                </ul>
-                <div className="p-4 border-t border-gray-700">
-                     <div className="dropdown dropdown-top w-full">
-                        <div tabIndex={0} role="button" className="btn btn-ghost w-full justify-start p-2 h-auto">
-                            <div className="avatar">
-                                <div className="w-10 rounded-full ring ring-purple-600 ring-offset-gray-800 ring-offset-2">
-                                    <img src="https://placehold.co/100x100/a855f7/ffffff.png?text=J" alt="Avatar do usuário" />
-                                </div>
-                            </div>
-                            <span className="ml-2">João Silva</span>
-                        </div>
-                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-700 rounded-box w-52 mb-2">
-                            <li><a><SettingsIcon /> Configurações</a></li>
-                            <li><a>Sair</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </aside>
+            <Sidebar 
+                activePage="dashboard"
+                userName="João Silva"
+                userAvatarUrl="https://placehold.co/100x100/a855f7/ffffff.png?text=J"
+            />
 
             {/* --- Main Content --- */}
             <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
@@ -112,48 +76,40 @@ export default function DashboardPage() {
                     <StatCard 
                         title="Indicações Totais"
                         icon={<UsersIcon />}
-                        value="1,200"
+                        value="1.200"
+                        description="Desde o início"
                         statusText="Sem alteração"
                         statusColor="text-yellow-500"
-                        progress="75"
-                        progressText="Conversão geral"
-                        progressValue="75%"
                     />
                      <StatCard 
                         title="Novas Indicações"
                         icon={<UserPlusIcon />}
                         value="85"
+                        description="Últimos 30 dias"
                         statusText="↗︎ 15%"
                         statusColor="text-green-500"
-                        progress="15"
-                        progressText="Meta mensal"
-                        progressValue="15%"
                     />
                      <StatCard 
                         title="Indicações Ativas"
                         icon={<UserCheckIcon />}
                         value="950"
+                        description="Clientes pagantes"
                         statusText="Estável"
                         statusColor="text-blue-500"
-                        progress="95"
-                        progressText="Retenção"
-                        progressValue="95%"
                     />
                      <StatCard 
-                        title="Pageviews"
-                        icon={<EyeIcon />}
+                        title="Indicações Inativas"
+                        icon={<UserMinusIcon />}
                         value="24.5k"
+                        description="Assinaturas canceladas"
                         statusText="↗︎ 20%"
                         statusColor="text-green-500"
-                        progress="80"
-                        progressText="Engajamento"
-                        progressValue="80%"
                     />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Sales Graph */}
-                    <motion.div className="lg:col-span-2 card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
+                    <motion.div className="lg:col-span-2 card bg-slate-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
                         <div className="card-body">
                             <h2 className="card-title text-white">Desempenho de Vendas</h2>
                             <div style={{ width: '100%', height: 300 }}>
@@ -172,7 +128,7 @@ export default function DashboardPage() {
                     </motion.div>
                     
                     {/* Balance Card */}
-                    <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}>
+                    <motion.div className="card bg-slate-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}>
                         <div className="card-body">
                             <h2 className="card-title text-white">Seu Saldo</h2>
                             <div className="space-y-4 mt-4">
@@ -182,7 +138,7 @@ export default function DashboardPage() {
                                         <div className="text-2xl font-bold text-white">R$ 5.430,50</div>
                                     </div>
                                 </div>
-                                <div className="card bg-gray-700/50">
+                                <div className="card bg-slate-700/50">
                                     <div className="card-body p-4">
                                         <div className="text-sm text-gray-400">Saldo Disponível</div>
                                         <div className="text-2xl font-bold text-green-400">R$ 2.150,00</div>
@@ -195,7 +151,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Recent Sales Table */}
-                <motion.div className="mt-8 card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }}>
+                <motion.div className="mt-8 card bg-slate-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }}>
                      <div className="card-body">
                         <h2 className="card-title mb-4 text-white">Vendas Recentes</h2>
                         <div className="overflow-x-auto">
