@@ -54,7 +54,7 @@ export default function Sidebar({ activePage, userName, userAvatarUrl }: Sidebar
                     <div tabIndex={0} role="button" className="btn btn-ghost w-full justify-start p-2 h-auto">
                         <div className="avatar">
                             <div className="w-8 rounded-full ring ring-purple-600 ring-offset-gray-800 ring-offset-2">
-                                <img src={userAvatarUrl} alt="Avatar do usuário" />
+                                <Image src={userAvatarUrl} alt="Avatar do usuário" />
                             </div>
                         </div>
                         <span className="ml-2">{userName}</span>

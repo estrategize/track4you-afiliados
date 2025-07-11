@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Sidebar from '@/components/Sidebar'; // Import the new Sidebar component
+import { UserMinusIcon, UsersIcon, UserPlusIcon, UserCheckIcon } from '@/components/Icons';
 
 // --- MOCK DATA ---
 const salesData = [
@@ -24,12 +23,6 @@ const recentSales = [
   { id: 4, product: 'Plano Premium', date: '05/07/2025', customer: 'ana.costa@example.com', value: 'R$ 149,90', status: 'Completo' },
   { id: 5, product: 'Plano Básico', date: '04/07/2025', customer: 'pedro.almeida@example.com', value: 'R$ 49,90', status: 'Cancelado' },
 ];
-
-// --- SVG ICONS ---
-const UserMinusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-red-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle strokeWidth="2" cx="8.5" cy="7" r="4"></circle><line strokeWidth="2" x1="18" y1="8" x2="23" y2="13"></line><line strokeWidth="2" x1="23" y1="8" x2="18" y2="13"></line></svg>;
-const UsersIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-purple-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>;
-const UserPlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-green-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path> <circle strokeWidth="2" cx="8.5" cy="7" r="4"></circle><line strokeWidth="2" x1="20" y1="8" x2="20" y2="14"></line><line strokeWidth="2" x1="23" y1="11" x2="17" y2="11"></line></svg>;
-const UserCheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 md:w-6 md:h-6 stroke-current text-blue-400"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle strokeWidth="2" cx="8.5" cy="7" r="4"></circle><polyline strokeWidth="2" points="17 11 19 13 23 9"></polyline></svg>;
 
 // --- Type definition for StatCard props ---
 interface StatCardProps {
