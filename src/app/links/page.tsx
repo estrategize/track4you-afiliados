@@ -61,7 +61,7 @@ export default function LinksPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="text-3xl font-bold text-white">Meus Links de Afiliado</h1>
+                    <h1 className="text-3xl font-bold text-white">Meus Links</h1>
                     <p className="text-gray-400 mt-2">Crie e gerencie seus links de campanha para rastrear suas indicações.</p>
                 </motion.div>
 

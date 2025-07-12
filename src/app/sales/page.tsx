@@ -3,10 +3,22 @@
 import { useState, useEffect, useMemo } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { motion } from 'framer-motion';
-import { DateRange, DayPicker } from 'react-day-picker';
+import { DateRange, DayPicker, ClassNames } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { 
+    CalendarIcon, 
+    FilterIcon, 
+    CommissionIcon, 
+    UserPlusIcon,
+    ChevronUpIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ChevronDownIcon,
+    CloseIcon,
+    SearchIcon
+} from '@/components/Icons';
 
 // --- MOCK DATA ---
 const allSales = [
@@ -38,35 +50,54 @@ const allSales = [
   { id: 26, date: '2025-07-15', product: 'Plano Básico', customer: 'cesar.dias@example.com', value: 49.90, monthly_payment: '1ª', status: 'Completo', utm_source: 'facebook', utm_medium: 'cpc', utm_campaign: 'promo_julho' },
 ];
 
-// --- SVG ICONS ---
-const CalendarIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>;
-const FilterIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L14 11.414V17l-4 4v-9.586L3.293 6.707A1 1 0 013 6V4z" /></svg>;
-const ChevronDownIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>;
-const CommissionIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>;
-const NewLeadsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>;
-
-type SortKey = 'date' | 'product' | 'customer' | 'value' | 'status';
+type SortKey = 'date' | 'product' | 'customer' | 'value' | 'monthly_payment' | 'status';
 type SortOrder = 'asc' | 'desc';
+
+// --- Custom Styles for DayPicker ---
+const calendarClassNames: Partial<ClassNames> = {
+    root: 'bg-transparent p-0',
+    month: 'space-y-2',
+    month_caption: 'flex justify-center items-center h-10 relative',
+    caption_label: 'text-base font-semibold text-white uppercase',
+    nav: 'flex items-center',
+    button_previous: 'h-8 w-8 z-10 flex pr-1 items-center justify-center !text-purple-600 top-0 rounded-full hover:bg-slate-700 absolute left-0',
+    button_next: 'h-8 w-8 z-10 flex pl-1 items-center justify-center !text-purple-600 top-0 rounded-full hover:bg-slate-700 absolute right-0',
+    month_grid: 'w-full border-collapse',
+    weekdays: 'flex',
+    weekday: 'w-10 h-10 flex items-center justify-center text-xs text-gray-400 capitalize',
+    week: 'flex w-full mt-1',
+    day: 'w-10 h-10 flex items-center justify-center',
+    day_button: 'h-9 w-9 flex items-center justify-center rounded-full hover:bg-slate-700 cursor-pointer text-sm',
+    today: 'bg-purple-500/20 text-purple-300 font-bold',
+    selected: '!bg-purple-600 text-white',
+    outside: 'text-gray-600 opacity-50',
+    range_middle: 'bg-purple-600/30 !rounded-none',
+    range_start: '!rounded-l-full',
+    range_end: '!rounded-r-full',
+};
+
 
 export default function SalesPage() {
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
     const [filteredSales, setFilteredSales] = useState(allSales);
-    const [activeUtmFilters, setActiveUtmFilters] = useState<string[]>([]);
-    const [utmFilterValues, setUtmFilterValues] = useState<{ [key: string]: string }>({});
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
+    const [filterValues, setFilterValues] = useState<{ [key: string]: string }>({});
+    const [customerSearch, setCustomerSearch] = useState('');
     const [sortConfig, setSortConfig] = useState<{ key: SortKey; order: SortOrder } | null>({ key: 'date', order: 'desc' });
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10;
 
-    // Simulate available UTMs from data
     const availableUtmSources = useMemo(() => [...new Set(allSales.map(s => s.utm_source).filter(Boolean))], []);
     const availableUtmMediums = useMemo(() => [...new Set(allSales.map(s => s.utm_medium).filter(Boolean))], []);
     const availableUtmCampaigns = useMemo(() => [...new Set(allSales.map(s => s.utm_campaign).filter(Boolean))], []);
+    const availableStatuses = useMemo(() => [...new Set(allSales.map(s => s.status).filter(Boolean))], []);
 
     const handleDatePreset = (preset: string) => {
         const today = new Date();
         let from: Date, to: Date = today;
         switch (preset) {
             case 'hoje': from = today; break;
+            case 'ontem': from = subDays(today, 1); to = subDays(today, 1); break;
             case '7dias': from = subDays(today, 6); break;
             case '30dias': from = subDays(today, 29); break;
             case 'estemes': from = startOfMonth(today); break;
@@ -80,31 +111,40 @@ export default function SalesPage() {
         setDateRange({ from, to });
     };
 
-    const handleUtmFilterToggle = (filter: string) => {
-        setActiveUtmFilters(prev => 
+    const handleFilterToggle = (filter: string) => {
+        setActiveFilters(prev => 
             prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
         );
     };
 
+    const handleRemoveFilter = (filterToRemove: string) => {
+        setActiveFilters(prev => prev.filter(f => f !== filterToRemove));
+        setFilterValues(prev => {
+            const newValues = { ...prev };
+            delete newValues[filterToRemove];
+            return newValues;
+        });
+    };
+
     useEffect(() => {
         let sales = [...allSales];
-
         if (dateRange?.from) {
             sales = sales.filter(sale => {
                 const saleDate = new Date(sale.date);
                 const from = dateRange.from!;
-                const to = dateRange.to || from; // If no 'to' date, use 'from'
+                const to = dateRange.to || from;
                 return saleDate >= from && saleDate <= to;
             });
         }
-
-        activeUtmFilters.forEach(filter => {
-            const value = utmFilterValues[filter];
+        if (customerSearch) {
+            sales = sales.filter(sale => sale.customer.toLowerCase().includes(customerSearch.toLowerCase()));
+        }
+        activeFilters.forEach(filter => {
+            const value = filterValues[filter];
             if (value) {
                 sales = sales.filter(sale => sale[filter as keyof typeof sale] === value);
             }
         });
-
         if (sortConfig !== null) {
             sales.sort((a, b) => {
                 if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.order === 'asc' ? -1 : 1;
@@ -112,10 +152,9 @@ export default function SalesPage() {
                 return 0;
             });
         }
-
         setFilteredSales(sales);
-        setCurrentPage(1); // Reset to first page on filter change
-    }, [dateRange, utmFilterValues, activeUtmFilters, sortConfig]);
+        setCurrentPage(1);
+    }, [dateRange, customerSearch, filterValues, activeFilters, sortConfig]);
 
     const requestSort = (key: SortKey) => {
         let order: SortOrder = 'asc';
@@ -127,50 +166,89 @@ export default function SalesPage() {
 
     const commissions = useMemo(() => filteredSales.reduce((acc, sale) => sale.status === 'Completo' ? acc + sale.value * 0.2 : acc, 0), [filteredSales]);
     const newLeads = useMemo(() => filteredSales.length, [filteredSales]);
-
-    // Pagination logic
+    
     const totalPages = Math.ceil(filteredSales.length / rowsPerPage);
     const currentRows = filteredSales.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
+    const SortableHeader = ({ sortKey, children }: { sortKey: SortKey, children: React.ReactNode }) => (
+        <th onClick={() => requestSort(sortKey)} className="cursor-pointer">
+            <div className="flex items-center gap-2">
+                {children}
+                {sortConfig?.key === sortKey && (
+                    sortConfig.order === 'asc' ? <ChevronUpIcon /> : <ChevronDownIcon />
+                )}
+            </div>
+        </th>
+    );
+
     return (
         <div className="flex h-screen overflow-hidden bg-slate-900 text-gray-300">
-            <Sidebar activePage="vendas" userName="João Silva" userAvatarUrl="https://placehold.co/100x100/a855f7/ffffff.png?text=J" />
-
+            <Sidebar activePage="vendas" userName="João Silva" />
             <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
                 <motion.h1 className="text-3xl font-bold text-white mb-8" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                     Vendas
                 </motion.h1>
-
                 <motion.div className="flex flex-wrap items-center gap-4 mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                     <div className="dropdown">
-                        <button tabIndex={0} className="btn btn-outline border-gray-600"><CalendarIcon />Filtrar por data<ChevronDownIcon /></button>
-                        <div tabIndex={0} className="dropdown-content z-[1] menu p-4 shadow bg-gray-800 rounded-box w-96 mt-2">
-                            <DayPicker mode="range" selected={dateRange} onSelect={setDateRange} locale={ptBR} showOutsideDays fixedWeeks />
-                            <div className="grid grid-cols-2 gap-2 mt-4 text-sm">
-                                <button onClick={() => handleDatePreset('hoje')} className="btn btn-ghost btn-sm">Hoje</button>
-                                <button onClick={() => handleDatePreset('7dias')} className="btn btn-ghost btn-sm">Últimos 7 dias</button>
-                                <button onClick={() => handleDatePreset('30dias')} className="btn btn-ghost btn-sm">Últimos 30 dias</button>
-                                <button onClick={() => handleDatePreset('estemes')} className="btn btn-ghost btn-sm">Este mês</button>
-                                <button onClick={() => handleDatePreset('mespassado')} className="btn btn-ghost btn-sm">Mês passado</button>
-                                <button onClick={() => setDateRange(undefined)} className="btn btn-ghost btn-sm col-span-2">Limpar</button>
+                        <div tabIndex={0} role="button" className="btn btn-outline border-gray-600"><CalendarIcon />Filtrar por data<ChevronDownIcon /></div>
+                        <div className="dropdown-content z-[1] shadow bg-slate-700 rounded-box mt-2 flex flex-row w-auto p-0">
+                            <div className="flex w-max flex-col space-y-1 p-4 border-r border-slate-700">
+                                <button onClick={() => handleDatePreset('hoje')} className="btn btn-ghost btn-sm justify-start">Hoje</button>
+                                <button onClick={() => handleDatePreset('ontem')} className="btn btn-ghost btn-sm justify-start">Ontem</button>
+                                <button onClick={() => handleDatePreset('7dias')} className="btn btn-ghost btn-sm justify-start">Últimos 7 dias</button>
+                                <button onClick={() => handleDatePreset('30dias')} className="btn btn-ghost btn-sm justify-start">Últimos 30 dias</button>
+                                <button onClick={() => handleDatePreset('estemes')} className="btn btn-ghost btn-sm justify-start">Este mês</button>
+                                <button onClick={() => handleDatePreset('mespassado')} className="btn btn-ghost btn-sm justify-start">Mês passado</button>
+                                <div className="divider my-2"></div>
+                                <button onClick={() => setDateRange(undefined)} className="btn btn-ghost btn-sm justify-start">Limpar</button>
+                            </div>
+                            <div className="p-4">
+                                <DayPicker 
+                                    mode="range" 
+                                    selected={dateRange} 
+                                    onSelect={setDateRange} 
+                                    locale={ptBR} 
+                                    showOutsideDays 
+                                    classNames={calendarClassNames}
+                                    components={{
+                                        Chevron: (props) => {
+                                            if (props.orientation === 'right') {
+                                                return <ChevronRightIcon className="text-purple-600" />;
+                                            }
+                                            return <ChevronLeftIcon className="text-purple-600" />;
+                                        },
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
                     <div className="dropdown">
-                        <button tabIndex={0} className="btn btn-outline border-gray-600"><FilterIcon />Adicionar Filtro</button>
-                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-800 rounded-box w-52 mt-2">
-                            <li><a onClick={() => handleUtmFilterToggle('utm_source')} className={!availableUtmSources.length ? 'disabled' : ''}>UTM Source</a></li>
-                            <li><a onClick={() => handleUtmFilterToggle('utm_medium')} className={!availableUtmMediums.length ? 'disabled' : ''}>UTM Medium</a></li>
-                            <li><a onClick={() => handleUtmFilterToggle('utm_campaign')} className={!availableUtmCampaigns.length ? 'disabled' : ''}>UTM Campaign</a></li>
+                        <div tabIndex={0} role="button" className="btn btn-outline border-gray-600"><FilterIcon />Adicionar Filtro</div>
+                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-slate-700 rounded-box w-52 mt-2">
+                            <li><a onClick={() => handleFilterToggle('status')} className={!availableStatuses.length ? 'disabled' : ''}>Status</a></li>
+                            <li><a onClick={() => handleFilterToggle('utm_source')} className={!availableUtmSources.length ? 'disabled' : ''}>UTM Source</a></li>
+                            <li><a onClick={() => handleFilterToggle('utm_medium')} className={!availableUtmMediums.length ? 'disabled' : ''}>UTM Medium</a></li>
+                            <li><a onClick={() => handleFilterToggle('utm_campaign')} className={!availableUtmCampaigns.length ? 'disabled' : ''}>UTM Campaign</a></li>
                         </ul>
                     </div>
+                     <div className="h-10 pl-2 pr-2 rounded-md w-80 flex items-center gap-2 bg-gray-800 border-1 border-gray-600">
+                        <input 
+                            type="text" 
+                            className="focus:outline-none grow bg-transparent" 
+                            placeholder="Buscar cliente..." 
+                            value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} />
+                        <SearchIcon className="absolute-left-4 !text-white w-4 h-4" />
+                    </div>
                 </motion.div>
-                
                 <div className="flex flex-wrap items-center gap-4 mb-8">
-                    {activeUtmFilters.map(filter => (
-                        <div key={filter} className="form-control">
-                            <select className="select select-bordered select-sm bg-gray-700 border-gray-600" value={utmFilterValues[filter] || ''} onChange={(e) => setUtmFilterValues(prev => ({...prev, [filter]: e.target.value}))}>
-                                <option disabled value="">{filter}</option>
+                    {activeFilters.map(filter => (
+                        <div key={filter} className="flex items-center gap-2 bg-gray-700/50 p-1 rounded-md">
+                             <button onClick={() => handleRemoveFilter(filter)} className="btn btn-xs btn-ghost p-1">
+                                <CloseIcon className="w-4 h-4 text-gray-400 hover:text-white" />
+                            </button>
+                            <select className="select select-bordered select-sm bg-gray-700 border-gray-600" value={filterValues[filter] || ''} onChange={(e) => setFilterValues(prev => ({...prev, [filter]: e.target.value}))}>
+                                <option disabled value="">{filter.replace('_', ' ')}</option>
+                                {filter === 'status' && availableStatuses.map(s => <option key={s}>{s}</option>)}
                                 {filter === 'utm_source' && availableUtmSources.map(s => <option key={s}>{s}</option>)}
                                 {filter === 'utm_medium' && availableUtmMediums.map(m => <option key={m}>{m}</option>)}
                                 {filter === 'utm_campaign' && availableUtmCampaigns.map(c => <option key={c}>{c}</option>)}
@@ -178,22 +256,25 @@ export default function SalesPage() {
                         </div>
                     ))}
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                        <div className="card-body flex-row items-center"><CommissionIcon /><div className="ml-4"><h2 className="text-gray-400">Comissões</h2><p className="text-3xl font-bold text-white">R$ {commissions.toFixed(2).replace('.', ',')}</p></div></div>
-                    </motion.div>
-                    <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                         <div className="card-body flex-row items-center"><NewLeadsIcon /><div className="ml-4"><h2 className="text-gray-400">Novas Indicações</h2><p className="text-3xl font-bold text-white">{newLeads}</p></div></div>
-                    </motion.div>
+                    <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}><div className="card-body flex-row items-center"><CommissionIcon /><div className="ml-4"><h2 className="text-gray-400">Comissões</h2><p className="text-3xl font-bold text-white">R$ {commissions.toFixed(2).replace('.', ',')}</p></div></div></motion.div>
+                    <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}><div className="card-body flex-row items-center"><UserPlusIcon /><div className="ml-4"><h2 className="text-gray-400">Novas Indicações</h2><p className="text-3xl font-bold text-white">{newLeads}</p></div></div></motion.div>
                 </div>
-
                 <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
                     <div className="card-body">
                         <h2 className="card-title text-white mb-4">Vendas Recentes</h2>
                         <div className="overflow-x-auto">
                             <table className="table">
-                                <thead><tr className="text-gray-400 border-b border-gray-700"><th onClick={() => requestSort('date')} className="cursor-pointer">Data</th><th onClick={() => requestSort('product')} className="cursor-pointer">Produto</th><th onClick={() => requestSort('customer')} className="cursor-pointer">Cliente</th><th onClick={() => requestSort('value')} className="cursor-pointer">Valor</th><th>Mensalidade</th><th onClick={() => requestSort('status')} className="cursor-pointer">Status</th></tr></thead>
+                                <thead>
+                                    <tr className="text-gray-400 border-b border-gray-700">
+                                        <SortableHeader sortKey="date">Data</SortableHeader>
+                                        <SortableHeader sortKey="product">Produto</SortableHeader>
+                                        <SortableHeader sortKey="customer">Cliente</SortableHeader>
+                                        <SortableHeader sortKey="value">Valor</SortableHeader>
+                                        <SortableHeader sortKey="monthly_payment">Mensalidade</SortableHeader>
+                                        <SortableHeader sortKey="status">Status</SortableHeader>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     {currentRows.map(sale => (
                                         <tr key={sale.id} className="hover:bg-gray-700/50 border-b border-gray-700/50">
