@@ -68,7 +68,7 @@ const calendarClassNames: Partial<ClassNames> = {
     week: 'flex w-full mt-1',
     day: 'w-10 h-10 flex items-center justify-center',
     day_button: 'h-9 w-9 flex items-center justify-center rounded-full hover:bg-slate-700 cursor-pointer text-sm',
-    today: 'bg-purple-500/20 text-purple-300 font-bold',
+    today: '!text-yellow-300 font-bold',
     selected: '!bg-purple-600 text-white',
     outside: 'text-gray-600 opacity-50',
     range_middle: 'bg-purple-600/30 !rounded-none',
@@ -109,12 +109,28 @@ export default function SalesPage() {
             default: from = new Date();
         }
         setDateRange({ from, to });
+
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
     };
 
     const handleFilterToggle = (filter: string) => {
         setActiveFilters(prev => 
             prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
         );
+
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+    };
+
+    const handleFilterValueChange = (filter: string, value: string) => {
+        setFilterValues(prev => ({ ...prev, [filter]: value }));
+        // Close the dropdown by blurring the active element
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
     };
 
     const handleRemoveFilter = (filterToRemove: string) => {
@@ -124,6 +140,10 @@ export default function SalesPage() {
             delete newValues[filterToRemove];
             return newValues;
         });
+
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
     };
 
     useEffect(() => {
@@ -188,7 +208,8 @@ export default function SalesPage() {
                 <motion.h1 className="text-3xl font-bold text-white mb-8" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                     Vendas
                 </motion.h1>
-                <motion.div className="flex flex-wrap items-center gap-4 mb-8" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+                <div>
+                <motion.div className="flex flex-wrap items-center gap-4 mb-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-outline border-gray-600"><CalendarIcon />Filtrar por data<ChevronDownIcon /></div>
                         <div className="dropdown-content z-[1] shadow bg-slate-700 rounded-box mt-2 flex flex-row w-auto p-0">
@@ -237,29 +258,48 @@ export default function SalesPage() {
                             className="focus:outline-none grow bg-transparent" 
                             placeholder="Buscar cliente..." 
                             value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} />
-                        <SearchIcon className="absolute-left-4 !text-white w-4 h-4" />
+                        <SearchIcon className="absolute-left-4 w-4 h-4" />
                     </div>
                 </motion.div>
-                <div className="flex flex-wrap items-center gap-4 mb-8">
+
+                {/* ACTIVE FILTERS CONTAINER*/}
+                <div className="flex flex-wrap items-center gap-4 mb-4 min-h-14">
                     {activeFilters.map(filter => (
-                        <div key={filter} className="flex items-center gap-2 bg-gray-700/50 p-1 rounded-md">
-                             <button onClick={() => handleRemoveFilter(filter)} className="btn btn-xs btn-ghost p-1">
-                                <CloseIcon className="w-4 h-4 text-gray-400 hover:text-white" />
+                        <div key={filter} className="flex items-center gap-1 bg-gray-700/50 pl-1 p-0 rounded-full">
+                             <button onClick={() => handleRemoveFilter(filter)} className="btn btn-xs btn-ghost hover:shadow-none hover:border-transparent hover:bg-transparent p-1">
+                                <CloseIcon className="w-4 h-4 text-gray-400 hover:text-red-300" />
                             </button>
-                            <select className="select select-bordered select-sm bg-gray-700 border-gray-600" value={filterValues[filter] || ''} onChange={(e) => setFilterValues(prev => ({...prev, [filter]: e.target.value}))}>
-                                <option disabled value="">{filter.replace('_', ' ')}</option>
-                                {filter === 'status' && availableStatuses.map(s => <option key={s}>{s}</option>)}
-                                {filter === 'utm_source' && availableUtmSources.map(s => <option key={s}>{s}</option>)}
-                                {filter === 'utm_medium' && availableUtmMediums.map(m => <option key={m}>{m}</option>)}
-                                {filter === 'utm_campaign' && availableUtmCampaigns.map(c => <option key={c}>{c}</option>)}
-                            </select>
+                            <div className="dropdown">
+                                <div tabIndex={0} role="button" className="btn pl-2 pr-2 bg-gray-700 rounded-full border-transparent">
+                                    {filterValues[filter] || filter.replace('_',' ')}
+                                    <ChevronDownIcon/>
+                                </div>
+                                <ul tabIndex={0} className="dropdown-content z-[1] menu p-1 shadow bg-slate-700 rounded-box w-52 mt-1">
+                                    {filter === 'status' && availableStatuses.map(s => 
+                                        <li key={s}><a onClick={() => handleFilterValueChange(filter, s)}>{s}</a></li>
+                                    )}
+                                    {filter === 'utm_source' && availableUtmSources.map(s => 
+                                        <li key={s}><a onClick={() => handleFilterValueChange(filter, s)}>{s}</a></li>
+                                    )}
+                                    {filter === 'utm_medium' && availableUtmMediums.map(m => 
+                                        <li key={m}><a onClick={() => handleFilterValueChange(filter, m)}>{m}</a></li>
+                                    )}
+                                    {filter === 'utm_campaign' && availableUtmCampaigns.map(c => 
+                                        <li key={c}><a onClick={() => handleFilterValueChange(filter, c)}>{c}</a></li>
+                                    )}
+                                </ul>
+                            </div>
                         </div>
                     ))}
                 </div>
+                </div>
+
+                {/* DATA TABLE */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}><div className="card-body flex-row items-center"><CommissionIcon /><div className="ml-4"><h2 className="text-gray-400">Comissões</h2><p className="text-3xl font-bold text-white">R$ {commissions.toFixed(2).replace('.', ',')}</p></div></div></motion.div>
                     <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}><div className="card-body flex-row items-center"><UserPlusIcon /><div className="ml-4"><h2 className="text-gray-400">Novas Indicações</h2><p className="text-3xl font-bold text-white">{newLeads}</p></div></div></motion.div>
                 </div>
+
                 <motion.div className="card bg-gray-800 shadow-xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
                     <div className="card-body">
                         <h2 className="card-title text-white mb-4">Vendas Recentes</h2>

@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link'; // Use Next.js Link for navigation
 import Avatar from './Avatar'
-import { DashboardIcon, LinkIcon, DollarIcon, WalletIcon, SettingsIcon } from './Icons';
+import { DashboardIcon, LinkIcon, DollarIcon, WalletIcon, SettingsIcon, LogOutIcon, OptionsIcon } from './Icons';
 
 // --- Type definition for Sidebar props ---
 interface SidebarProps {
@@ -46,25 +46,32 @@ export default function Sidebar({ activePage, userName, userAvatarUrl }: Sidebar
             </ul>
             <div className="p-1 border-t border-gray-700">
                  <div className="dropdown dropdown-top w-full">
-                    <div tabIndex={0} role="button" className="btn btn-ghost w-full justify-start p-2 h-auto">
-                        <div className="avatar">
-                            <div className="w-8 rounded-full ring ring-purple-600 ring-offset-gray-800 ring-offset-2">
-                                {userAvatarUrl? (
-                                    <Image 
-                                    src={userAvatarUrl} alt="Avatar" 
-                                    width={32}
-                                    height={32}
-                                    />
-                                ) : (
-                                    <Avatar name={userName} />
-                                )}
+                    <div tabIndex={0} role="button" className="flex items-center justify-between w-full p-2 h-auto btn btn-ghost">
+                        {/* Group for avatar and name on the left */}
+                        <div className="flex items-center gap-3">
+                            <div className="avatar">
+                                <div className="w-8 rounded-full ring ring-purple-600 ring-offset-gray-800 ring-offset-2">
+                                    {userAvatarUrl ? (
+                                        <Image 
+                                            src={userAvatarUrl} 
+                                            alt="Avatar" 
+                                            width={32}
+                                            height={32}
+                                        />
+                                    ) : (
+                                        <Avatar name={userName} />
+                                    )}
+                                </div>
                             </div>
+                            <span>{userName}</span>
                         </div>
-                        <span className="ml-2">{userName}</span>
+                        
+                        {/* Icon on the right */}
+                        <OptionsIcon className="text-white" />
                     </div>
                     <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-700 rounded-box w-full mb-2">
-                        <li><a><SettingsIcon /> Configurações</a></li>
-                        <li><a>Sair</a></li>
+                        <li><a className="active:!bg-purple-700"><SettingsIcon /> Configurações</a></li>
+                        <li><a className="active:!bg-purple-700 !bg-red-700 text-white text-bold"> <LogOutIcon/><b> Sair</b></a></li>
                     </ul>
                 </div>
             </div>
