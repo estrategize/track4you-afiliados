@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Sidebar from '@/components/Sidebar'; // Import the new Sidebar component
 import { UserMinusIcon, UsersIcon, UserPlusIcon, UserCheckIcon } from '@/components/Icons';
+import Link from 'next/link';
 
 // --- MOCK DATA ---
 const salesData = [
@@ -145,7 +146,9 @@ export default function DashboardPage() {
                                         <div className="text-2xl font-bold text-green-400">R$ 2.150,00</div>
                                     </div>
                                 </div>
-                                <button className="btn bg-purple-600 hover:bg-purple-700 border-none text-white w-full mt-2">Solicitar Saque</button>
+                                <Link href="/wallet">
+                                <button className="btn bg-purple-600 hover:bg-purple-700 border-none text-white w-full mt-2">Solicitar Saque </button>
+                                </Link>
                             </div>
                         </div>
                     </motion.div>

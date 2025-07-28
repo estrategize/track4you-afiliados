@@ -6,7 +6,7 @@ import { DashboardIcon, LinkIcon, DollarIcon, WalletIcon, SettingsIcon, LogOutIc
 
 // --- Type definition for Sidebar props ---
 interface SidebarProps {
-  activePage: 'dashboard' | 'links' | 'vendas' | 'financeiro';
+  activePage: 'dashboard' | 'links' | 'vendas' | 'financeiro' | 'settings';
   userName: string;
   userAvatarUrl?: string;
 }
@@ -69,9 +69,11 @@ export default function Sidebar({ activePage, userName, userAvatarUrl }: Sidebar
                         {/* Icon on the right */}
                         <OptionsIcon className="text-white" />
                     </div>
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-700 rounded-box w-full mb-2">
-                        <li><a className="active:!bg-purple-700"><SettingsIcon /> Configurações</a></li>
-                        <li><a className="active:!bg-purple-700 !bg-red-700 text-white text-bold"> <LogOutIcon/><b> Sair</b></a></li>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 gap-1 shadow bg-gray-700 rounded-box w-full mb-2">
+                        <li><Link href="/settings" className={`w-full active:!bg-purple-700 ${activePage === 'settings' ? 'active' : ''}`}>
+                                <SettingsIcon /> Configurações
+                            </Link></li>
+                        <li><a className="active:!bg-red-800 !bg-red-700 text-white text-bold"> <LogOutIcon/><b> Sair</b></a></li>
                     </ul>
                 </div>
             </div>

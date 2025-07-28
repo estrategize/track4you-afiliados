@@ -84,7 +84,7 @@ export default function LinksPage() {
                         </div>
                         <div className="form-control mt-4">
                             <div className="join w-full">
-                                <input type="text" readOnly value={generatedUrl} className="input join-item w-full bg-slate-700 text-gray-300 focus:outline-none" />
+                                <input type="text" readOnly value={generatedUrl} className="input join-item w-full bg-slate-700 text-gray-300 focus:!border-gray-500 focus:outline-none" />
                                 <button className="btn join-item bg-purple-600 hover:bg-purple-700 border-none w-32" onClick={handleCopy}>
                                     {copied ? <CheckIcon /> : <CopyIcon />}
                                     <span className="ml-2">{copied ? 'Copiado!' : 'Copiar'}</span>
